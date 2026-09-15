@@ -1,0 +1,339 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+body {
+    background-color: #fafafa;
+    padding: 40px 20px;
+    display: flex;
+    justify-content: flex-start;
+}
+
+.swagger-ui-container {
+    width: 100%;
+    max-width: 800px;
+    border-radius: 4px;
+    overflow: hidden;
+
+    margin-top: 80px;
+    margin-left: 4%;
+}
+
+/* De Dropdown Balk (Swagger POST stijl) */
+.api-endpoint-balk {
+    background-color: rgba(73, 204, 144, 0.1);
+    border: 1px solid #49cc90;
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+}
+
+.api-endpoint-balk:hover {
+    background-color: rgba(73, 204, 144, 0.15);
+}
+
+/* Groene POST badge */
+.method-badge {
+    background-color: #49cc90;
+    color: #ffffff;
+    font-weight: bold;
+    font-size: 14px;
+    padding: 6px 14px;
+    border-radius: 3px;
+    min-width: 80px;
+    text-align: center;
+}
+
+.api-path {
+    font-family: monospace;
+    font-weight: bold;
+    color: #3b4151;
+    margin-left: 15px;
+    font-size: 15px;
+}
+
+.api-summary {
+    color: #3b4151;
+    font-size: 13px;
+    margin-left: 15px;
+    flex-grow: 1;
+}
+
+.arrow-icon {
+    color: #3b4151;
+    font-size: 12px;
+    transition: transform 0.3s ease;
+}
+
+.arrow-icon.open {
+    transform: rotate(180deg);
+}
+
+/* Dropdown Container */
+.api-dropdown-content {
+    display: none; /* Standaard gesloten */
+    background-color: rgba(73, 204, 144, 0.05);
+    border: 1px solid #49cc90;
+    border-top: none;
+    padding: 20px;
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+}
+
+/* --- HERSTEL VAN DE GROENE 'ADD NEW LID' KNOP (SWAGGER STIJL) --- */
+.btn-try-out {
+    background-color: #49cc90 !important; /* Prachtig Swagger groen */
+    color: #ffffff !important;            /* Strak witte tekst */
+    border: none !important;
+    padding: 6px 14px !important;
+    font-size: 13px !important;
+    font-weight: bold !important;
+    border-radius: 4px !important;
+    cursor: pointer !important;
+    transition: background-color 0.2s ease !important;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05) !important;
+}
+
+.btn-try-out:hover {
+    background-color: #3ca977 !important; /* Iets donkerder groen bij hoveren */
+}
+
+
+.request-box h4, .response-box h4 {
+    color: #3b4151;
+    font-size: 14px;
+    margin-bottom: 12px;
+}
+
+/* Het Grote Witte Invoerkader */
+.white-input-card {
+    background-color: #ffffff;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    padding: 25px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 18px;
+}
+
+.input-group label {
+    font-size: 14px;
+    font-weight: bold;
+    color: #3b4151;
+    margin-bottom: 6px;
+}
+
+.input-group input {
+    padding: 10px 14px;
+    font-size: 15px;
+    border: 1px solid #cbd5e1;
+    border-radius: 4px;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.input-group input:focus {
+    border-color: #49cc90;
+    box-shadow: 0 0 0 3px rgba(73, 204, 144, 0.2);
+}
+
+/* De Grote Submit Knop */
+.btn-submit {
+    display: block;
+    width: 100%;
+    background-color: #49cc90;
+    color: #ffffff;
+    border: none;
+    padding: 12px;
+    font-size: 15px;
+    font-weight: bold;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    margin-top: 10px;
+}
+
+.btn-submit:hover {
+    background-color: #3ca977;
+}
+
+/* Response Paneel */
+.response-box {
+    margin-top: 25px;
+    border-top: 1px dashed #49cc90;
+    padding-top: 20px;
+}
+
+#response-output {
+    background-color: #292b36;
+    color: #a9a9a9;
+    padding: 15px;
+    border-radius: 4px;
+    font-family: monospace;
+    font-size: 13px;
+    overflow-x: auto;
+    white-space: pre-wrap;
+}
+
+
+
+
+/* --- POSITIONERING RECHTSBOVEN --- */
+.top-nav-bar {
+    position: absolute;
+    top: 25px;
+    right: 4%;
+    z-index: 10;
+}
+
+/* De Swagger-stijl knop */
+.btn-authorize {
+    background-color: #ffffff;
+    color: #49cc90;
+    border: 2px solid #49cc90;
+    padding: 10px 24px;
+    font-size: 14px;
+    font-weight: bold;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+}
+
+.btn-authorize:hover {
+    background-color: rgba(73, 204, 144, 0.05);
+    transform: translateY(-1px); /* Subtiele lift bij hoveren */
+    box-shadow: 0 6px 14px rgba(73, 204, 144, 0.12);
+}
+
+/* State wanneer geautoriseerd (Wordt grijs/slot op slot net als Swagger) */
+.btn-authorize.locked {
+    color: #f93e3e;
+    border-color: #f93e3e;
+}
+.btn-authorize.locked:hover {
+    background-color: rgba(249, 62, 62, 0.05);
+}
+
+/* Grotere slot-icoon schaling */
+.lock-icon {
+    font-size: 17px;
+}
+
+/* --- POP-UP MODAL (DE TABEL) STYLING --- */
+.auth-modal-overlay {
+    display: none; /* Standaard onzichtbaar */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.4); /* Donkere waas achter het venster */
+    z-index: 100;
+    justify-content: center;
+    align-items: center;
+}
+
+.auth-modal-card {
+    background-color: #ffffff;
+    width: 100%;
+    max-width: 480px;
+    border-radius: 4px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    border: 1px solid #ced4da;
+    overflow: hidden;
+    animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.auth-modal-header {
+    background-color: #f7f7f7;
+    padding: 15px 20px;
+    border-bottom: 1px solid #ced4da;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.auth-modal-header h3 {
+    color: #3b4151;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.btn-close-modal {
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: #aaaaAA;
+    cursor: pointer;
+}
+.btn-close-modal:hover { color: #3b4151; }
+
+.auth-modal-body {
+    padding: 25px 20px;
+}
+
+.auth-instruction {
+    font-size: 13px;
+    color: #6b7280;
+    margin-bottom: 18px;
+    line-height: 1.5;
+}
+
+.success-text {
+    color: #49cc90;
+    font-weight: 600;
+}
+
+/* Knoppen binnen de pop-up */
+.btn-modal-action {
+    background-color: #49cc90;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: bold;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 5px;
+    transition: background-color 0.2s;
+}
+.btn-modal-action:hover { background-color: #3ca977; }
+
+.modal-footer-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-modal-cancel {
+    background-color: #f93e3e;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: bold;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 5px;
+}
+.btn-modal-cancel:hover { background-color: #d63333; }
