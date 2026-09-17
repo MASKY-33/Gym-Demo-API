@@ -56,7 +56,6 @@ async def code_aanvragen(payload: EmailAanvraag):
 
 
 
-
 @app.post("/api/v1/auth/login", summary="2. Autoriseren (Verkrijg 30-minuten Keycard)")
 async def login(payload: LoginAanvraag):
     if not tijdelijk_wachtwoord_opslag["code"] or datetime.now() > tijdelijk_wachtwoord_opslag["verloopt_om"]:
