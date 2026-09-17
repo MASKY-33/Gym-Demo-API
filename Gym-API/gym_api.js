@@ -88,7 +88,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (res.ok) {
                 // TOON DE UNIEKE CODE HIER IN EEN POP-UP!
-                alert(`[DEMO NOTIFICATIE]\n\nEr is een uniek tijdelijk wachtwoord gegenereerd door de backend:\n🔑 ${data.demo_code}\n\nVul deze code in bij de volgende stap.`);
+                alert(`[DEMO NOTIFICATIE]\n\nHier is het tijdelijke wachtwoord om acties uit te kunnen voeren:\n🔑 ${data.demo_code}\n\nVul deze code in bij de volgende stap.`);
                 
                 step1Div.style.display = 'none';
                 step2Div.style.display = 'block';
