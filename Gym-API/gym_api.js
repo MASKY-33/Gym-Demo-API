@@ -83,11 +83,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email: emailVal })
             });
+            
+            const data = await res.json();
+
             if (res.ok) {
+                // TOON DE UNIEKE CODE HIER IN EEN POP-UP!
+                alert(`[DEMO NOTIFICATIE]\n\nEr is een uniek tijdelijk wachtwoord gegenereerd door de backend:\n🔑 ${data.demo_code}\n\nVul deze code in bij de volgende stap.`);
+                
                 step1Div.style.display = 'none';
                 step2Div.style.display = 'block';
             } else {
-                const data = await res.json();
                 alert(data.detail || 'Fout bij aanvragen code.');
             }
         } catch (err) { alert('Geen verbinding met backend.'); }
