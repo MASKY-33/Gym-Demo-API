@@ -31,8 +31,8 @@ app.add_middleware(
 )
 
 
-VAST_EMAIL = "masky.somebody33@gmail.com"  # Jouw vaste bevoegde e-mailadres
 
+VAST_EMAIL = "getpassword@gmail.com"  # Jouw vaste bevoegde e-mailadres
 
 
 # ==================== BEVEILIGINGS ENDPOINTS =====================
@@ -40,16 +40,20 @@ VAST_EMAIL = "masky.somebody33@gmail.com"  # Jouw vaste bevoegde e-mailadres
 @app.post("/api/v1/auth/code-aanvragen", summary="1. Vraag tijdelijk wachtwoord aan")
 async def code_aanvragen(payload: EmailAanvraag):
     if payload.email.lower() != VAST_EMAIL.lower():
-        raise HTTPException(status_code=403, detail="Dit e-mailadres is niet bevoegd.")
+        raise HTTPException(status_code=403, detail="Dit e-mailadres is niet bevoegd. Gebruik getpassword@gmail.com")
     
+    # Genereer elke keer een UNIEKE 6-cijferige code
     tijdelijke_code = "".join(secrets.choice("0123456789") for _ in range(6))
     tijdelijk_wachtwoord_opslag["code"] = tijdelijke_code
     tijdelijk_wachtwoord_opslag["verloopt_om"] = datetime.now() + timedelta(minutes=5)
     
-    # Geprint in de terminal tot de e-mailkoppeling er is
-    print(f"\n[E-MAIL SIMULATIE] Verzonden naar {VAST_EMAIL}: Jouw tijdelijke code is: {tijdelijke_code}\n")
-    
-    return {"status": "success", "message": "Tijdelijk wachtwoord is verzonden (Zie je Python terminal!)."}
+    # We sturen de unieke code nu VEILIG mee terug in de response voor de demo-frontend
+    return {
+        "status": "success", 
+        "message": "Tijdelijk wachtwoord gegenereerd!",
+        "demo_code": tijdelijke_code  # <-- JavaScript kan dit nu lezen en tonen!
+    }
+
 
 
 
