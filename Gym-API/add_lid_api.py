@@ -16,7 +16,7 @@ from auth import oauth2_scheme, tijdelijk_wachtwoord_opslag, actieve_keycards, c
 
 app = FastAPI(
     title="Masky Gym Secure API",
-    description="Gym API beveiligd met een 30-minuten Keycard, Naam-validatie en SQLite database.",
+    description="Gym API beveiligd met een 3-minuten Keycard, Naam-validatie en SQLite database.",
     version="1.0.0"
 )
 
@@ -31,8 +31,8 @@ app.add_middleware(
 )
 
 
+VAST_EMAIL = "wachtwoord@gmail.com"  # Jouw vaste bevoegde e-mailadres
 
-VAST_EMAIL = "getpassword@gmail.com"  # Jouw vaste bevoegde e-mailadres
 
 
 # ==================== BEVEILIGINGS ENDPOINTS =====================
@@ -40,16 +40,16 @@ VAST_EMAIL = "getpassword@gmail.com"  # Jouw vaste bevoegde e-mailadres
 @app.post("/api/v1/auth/code-aanvragen", summary="1. Vraag tijdelijk wachtwoord aan")
 async def code_aanvragen(payload: EmailAanvraag):
     if payload.email.lower() != VAST_EMAIL.lower():
-        raise HTTPException(status_code=403, detail="Dit e-mailadres is niet bevoegd. Gebruik getpassword@gmail.com")
-    
+        raise HTTPException(status_code=403, detail="Dit e-mailadres is niet bevoegd. Gebruik wachtwoord@gmail.com")
+
     # Genereer elke keer een UNIEKE 6-cijferige code
     tijdelijke_code = "".join(secrets.choice("0123456789") for _ in range(6))
     tijdelijk_wachtwoord_opslag["code"] = tijdelijke_code
     tijdelijk_wachtwoord_opslag["verloopt_om"] = datetime.now() + timedelta(minutes=5)
-    
+
     # We sturen de unieke code nu VEILIG mee terug in de response voor de demo-frontend
     return {
-        "status": "success", 
+        "status": "success",
         "message": "Tijdelijk wachtwoord gegenereerd!",
         "demo_code": tijdelijke_code  # <-- JavaScript kan dit nu lezen en tonen!
     }
@@ -60,20 +60,19 @@ async def code_aanvragen(payload: EmailAanvraag):
 async def login(payload: LoginAanvraag):
     if not tijdelijk_wachtwoord_opslag["code"] or datetime.now() > tijdelijk_wachtwoord_opslag["verloopt_om"]:
         raise HTTPException(status_code=400, detail="Geen actieve code gevonden of code is verlopen.")
-    
+
     if payload.tijdelijk_wachtwoord != tijdelijk_wachtwoord_opslag["code"] or payload.email.lower() != VAST_EMAIL.lower():
         raise HTTPException(status_code=401, detail="Onjuist e-mailadres of onjuist tijdelijk wachtwoord.")
-    
+
     keycard_id = secrets.token_hex(32)
     actieve_keycards[keycard_id] = datetime.now() + timedelta(minutes=30)
     tijdelijk_wachtwoord_opslag["code"] = None
-    
+
     return {
         "access_token": keycard_id,
         "token_type": "bearer",
         "expires_in_seconds": 1800
     }
-
 
 
 @app.post("/api/v1/auth/logout", summary="3. Deautoriseren (Unauthorize)")
@@ -90,7 +89,7 @@ async def logout(token: str = Depends(oauth2_scheme)):
 async def lid_aanmaken(payload: LidAanmakenSchema, token: str = Depends(controleer_keycard)):
     cursor = db_conn.cursor()
     huidige_tijd = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    
+
     try:
         # Sla het lid permanent op in de SQLite database
         cursor.execute(
@@ -98,9 +97,9 @@ async def lid_aanmaken(payload: LidAanmakenSchema, token: str = Depends(controle
             (payload.naam, payload.age, payload.email, huidige_tijd)
         )
         db_conn.commit()
-        
+
         print(f"[DATABASE LOG] Nieuw lid succesvol opgeslagen: {payload.naam}")
-        
+
         return {
             "status": "success",
             "message": f"Lid '{payload.naam}' is succesvol en permanent opgeslagen in de database!",
@@ -115,3 +114,28 @@ async def lid_aanmaken(payload: LidAanmakenSchema, token: str = Depends(controle
     except sqlite3.Error as e:
         print(f"[DATABASE ERROR] {e}")
         raise HTTPException(status_code=500, detail="Interne databasefout bij het opslaan van het lid.")
+
+
+
+@app.get("/api/v1/leden", summary="Haal alle gym-leden op")
+async def haal_leden_op():
+    cursor = db_conn.cursor()
+    try:
+        # Haal alle kolommen op uit de SQLite database, gesorteerd op ID
+        cursor.execute("SELECT id, naam, age, email, is_active FROM gym_members ORDER BY id ASC")
+        rows = cursor.fetchall()
+
+        # Zet de database-rijen om naar een nette lijst van JSON-objecten voor JavaScript
+        leden_lijst = []
+        for row in rows:
+            leden_lijst.append({
+                "id": row[0],
+                "naam": row[1],
+                "age": row[2],
+                "email": row[3],
+                "is_active": bool(row[4])
+            })
+        return leden_lijst
+    except sqlite3.Error as e:
+        print(f"[DATABASE ERROR] {e}")
+        raise HTTPException(status_code=500, detail="Kon de leden niet ophalen uit de database.")

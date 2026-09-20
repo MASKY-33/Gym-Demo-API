@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
+
     <title>Masky Gym API - Secure UI</title>
-    
+
     <link rel="stylesheet" href="gym_api.css">
 </head>
 <body>
@@ -13,88 +13,117 @@
     <!-- RECHTSBOVEN: De Swagger-stijl Autorisatie Knop -->
     <div class="top-nav-bar">
         <button id="btn-auth-trigger" class="btn-authorize unlocked">
-            Autoriseer <span class="lock-icon">🔓</span>
+            Autoriseren <span class="lock-icon">🔓</span>
         </button>
     </div>
 
-    <!-- Links: De dropdown balk om leden aan te maken (bestaande opzet) -->
-    <div class="swagger-ui-container">
-        <div class="api-endpoint-balk" id="endpoint-trigger">
-            <span class="method-badge">POST</span>
-            <span class="api-path">/api/v1/leden</span>
-            <span class="api-summary">Maak een nieuw gym-lid aan</span>
-            <span class="arrow-icon" id="arrow-icon">▼</span>
-        </div>
+    <!-- HOOFD-LAYOUT: Splits het scherm in Links (Swagger) en Rechts (Database) -->
+    <div class="main-dashboard-layout">
 
-        <div class="api-dropdown-content" id="dropdown-content">
-            <div class="request-box">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                    <h4>Parameters / Request Body</h4>
-                    <button class="btn-try-out" id="btn-activate-form">Add new lid</button>
+        <!-- LINKERKANT: De dropdown balk om leden aan te maken -->
+        <div class="swagger-ui-container">
+            <div class="api-endpoint-balk" id="endpoint-trigger">
+                <span class="method-badge">POST</span>
+                <span class="api-path">/api/v1/leden</span>
+                <span class="api-summary">Maak een nieuw gym-lid aan</span>
+                <span class="arrow-icon" id="arrow-icon">▼</span>
+            </div>
+
+            <div class="api-dropdown-content" id="dropdown-content">
+                <div class="request-box">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                        <h4>Parameters / Request Body</h4>
+                        <button class="btn-try-out" id="btn-activate-form">Add new lid</button>
+                    </div>
+                    
+                    <form id="add-lid-form" class="white-input-card">
+                        <div class="input-group">
+                            <label for="input-name">Naam:</label>
+                            <input type="text" id="input-name" placeholder="bv. Jan Janssen" required disabled pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑüÜäÄöÖçÇ\s\-]+">
+                        </div>
+                        <div class="input-group">
+                            <label for="input-age">Age:</label>
+                            <input type="number" id="input-age" placeholder="bv. 25" required min="16" disabled>
+                        </div>
+                        <div class="input-group">
+                            <label for="input-email">Email:</label>
+                            <input type="email" id="input-email" placeholder="bv. jan@example.com" required disabled>
+                        </div>
+                        <button type="submit" class="btn-submit" id="btn-submit-form" disabled style="opacity: 0.5;">Verzenden</button>
+                    </form>
                 </div>
-                
-                <form id="add-lid-form" class="white-input-card">
-                    <div class="input-group">
-                        <label for="input-name">Naam:</label>
-                        <input type="text" id="input-name" placeholder="bv. Jan Janssen" required disabled pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑüÜäÄöÖçÇ\s\-]+">
-                    </div>
-                    <div class="input-group">
-                        <label for="input-age">Age:</label>
-                        <input type="number" id="input-age" placeholder="bv. 25" required min="16" disabled>
-                    </div>
-                    <div class="input-group">
-                        <label for="input-email">Email:</label>
-                        <input type="email" id="input-email" placeholder="bv. jan@example.com" required disabled>
-                    </div>
-                    <button type="submit" class="btn-submit" id="btn-submit-form" disabled style="opacity: 0.5;">Verzenden</button>
-                </form>
-            </div>
 
-            <div class="response-box" id="response-panel" style="display: none;">
-                <h4>Response Body</h4>
-                <pre id="response-output"></pre>
+                <div class="response-box" id="response-panel" style="display: none;">
+                    <h4>Response Body</h4>
+                    <pre id="response-output"></pre>
+                </div>
             </div>
         </div>
+
+        <!-- RECHTERKANT: Het Database Overzicht Kader met harde lijnen -->
+        <div class="database-monitor-container">
+            <h3>🗄️ Live SQLite Database Monitor</h3>
+            <p class="db-subtitle">Tabel: <code>gym_leden</code> (Real-time weergave)</p>
+
+            <div class="database-table">
+                <!-- Tabel Header met kolommen -->
+                <div class="db-header-row">
+                    <div class="db-cell col-id">ID</div>
+                    <div class="db-cell col-naam">Naam</div>
+                    <div class="db-cell col-age">Leeftijd</div>
+                    <div class="db-cell col-email">E-mail</div>
+                    <div class="db-cell col-active">is_Active</div>
+                </div>
+
+                <!-- Hier komen de database rijen live in te staan via JavaScript -->
+                <div id="db-rows-container">
+                    <!-- Rijen worden hier live ingevoegd -->
+                </div>
+            </div>
+        </div>
+
     </div>
 
-    <!-- POP-UP TABEL: Het Autorisatie Venster (Standaard verborgen) -->
+    <!-- POP-UP TABEL: Het Autorisatie Venster -->
     <div class="auth-modal-overlay" id="auth-modal">
         <div class="auth-modal-card">
             <div class="auth-modal-header">
                 <h3>Autoriseren</h3>
                 <button class="btn-close-modal" id="btn-close-modal">&times;</button>
             </div>
-            
+
             <div class="auth-modal-body">
-                <!-- Stap 1: Email invoeren voor de pincode -->
-                <div id="auth-step-1">
-                    <p class="auth-instruction">Geef het email-adres "getpassword@gmail.com" in om een tijdelijk wachtwoord te ontvangen.</p>
+                <!-- FORMULIER 1: Email invoeren (Stap 1) -->
+                <form id="auth-form-step-1">
+                    <p class="auth-instruction">Geef het e-mailadres "wachtwoord@gmail.com" in om een tijdelijk wachtwoord te krijgen.</p>
                     <div class="input-group">
                         <label>E-mailadres:</label>
-                        <input type="email" id="auth-email" placeholder="admin@masky.company" required autocomplete="off">
+                        <input type="email" id="auth-email" required autocomplete="off">
                     </div>
-                    <button type="button" class="btn-modal-action" id="btn-request-code">Vraag tijdelijke code aan</button>
-                </div>
+                    <button type="submit" class="btn-modal-action" id="btn-request-code">Vraag tijdelijke code aan</button>
+                </form>
 
-                <!-- Stap 2: Pincode invoeren (Eerst verborgen) -->
-                <div id="auth-step-2" style="display: none;">
-                    <p class="auth-instruction success-text">Er is een 6-cijferige code verzonden naar uw e-mail! (Zie Python terminal)</p>
+                <!-- FORMULIER 2: Pincode invoeren (Stap 2) -->
+                <form id="auth-form-step-2" style="display: none;">
+                    <p class="auth-instruction success-text">Er is een 6-cijferige code gegenereerd! (Zie Python terminal)</p>
                     <div class="input-group">
                         <label>Tijdelijk Wachtwoord (Pincode):</label>
-                        <input type="text" id="auth-code" placeholder="6-cijferige code" maxlength="6" autocomplete="off">
+                        <input type="text" id="auth-code" placeholder="6-cijferige code" maxlength="6" autocomplete="off" required>
                     </div>
-                    <div class="modal-footer-buttons">
-                        <button type="button" class="btn-modal-action" id="btn-submit-auth">Autoriseer</button>
-                        <button type="button" class="btn-modal-cancel" id="btn-deauthorize-modal" style="display: none;">Deautoriseren</button>
-                    </div>
-                </div>
+                    <button type="submit" class="btn-modal-action" id="btn-submit-auth">Autoriseer</button>
+                </form>
+
+                <!-- FORMULIER 3: Alleen de deautorisatie-knop -->
+                <form id="auth-form-logout" style="display: none;">
+                    <p class="auth-instruction" style="text-align: center; margin-bottom: 20px;">Je bent momenteel geautoriseerd.</p>
+                    <button type="submit" class="btn-modal-cancel" id="btn-deauthorize-modal">Deautoriseren</button>
+                </form>
             </div>
         </div>
     </div>
 
 
-
-
+    
     <script src="gym_api.js"></script>
 </body>
 </html>

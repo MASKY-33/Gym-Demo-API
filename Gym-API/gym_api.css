@@ -7,19 +7,26 @@
 
 body {
     background-color: #fafafa;
-    padding: 40px 20px;
-    display: flex;
-    justify-content: flex-start;
+    padding: 40px 0;
 }
 
+/* --- NIEUW: DE HOOFDLAYOUT DIE SCHERM SPLITST --- */
+.main-dashboard-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Links en rechts exact even breed */
+    gap: 40px;
+    width: 100%;
+    max-width: 1600px;
+    margin: 80px auto 0 auto;
+    padding: 0 4%;
+    align-items: start;
+}
+
+/* Aangepast zodat de container de gridruimte netjes vult */
 .swagger-ui-container {
     width: 100%;
-    max-width: 800px;
     border-radius: 4px;
     overflow: hidden;
-
-    margin-top: 80px;
-    margin-left: 4%;
 }
 
 /* De Dropdown Balk (Swagger POST stijl) */
@@ -104,7 +111,6 @@ body {
     background-color: #3ca977 !important; /* Iets donkerder groen bij hoveren */
 }
 
-
 .request-box h4, .response-box h4 {
     color: #3b4151;
     font-size: 14px;
@@ -185,9 +191,6 @@ body {
     white-space: pre-wrap;
 }
 
-
-
-
 /* --- POSITIONERING RECHTSBOVEN --- */
 .top-nav-bar {
     position: absolute;
@@ -215,11 +218,11 @@ body {
 
 .btn-authorize:hover {
     background-color: rgba(73, 204, 144, 0.05);
-    transform: translateY(-1px); /* Subtiele lift bij hoveren */
+    transform: translateY(-1px);
     box-shadow: 0 6px 14px rgba(73, 204, 144, 0.12);
 }
 
-/* State wanneer geautoriseerd (Wordt grijs/slot op slot net als Swagger) */
+/* State wanneer geautoriseerd */
 .btn-authorize.locked {
     color: #f93e3e;
     border-color: #f93e3e;
@@ -235,13 +238,13 @@ body {
 
 /* --- POP-UP MODAL (DE TABEL) STYLING --- */
 .auth-modal-overlay {
-    display: none; /* Standaard onzichtbaar */
+    display: none;
     position: fixed;
     top: 0;
     left: 0;
     width: 100vw;
     height: 100vh;
-    background-color: rgba(0, 0, 0, 0.4); /* Donkere waas achter het venster */
+    background-color: rgba(0, 0, 0, 0.4);
     z-index: 100;
     justify-content: center;
     align-items: center;
@@ -337,3 +340,107 @@ body {
     margin-top: 5px;
 }
 .btn-modal-cancel:hover { background-color: #d63333; }
+
+
+
+
+
+/* ====================================================================
+   --- STYLING VOOR HET REAL-TIME DATABASE KADER MET LIJNEN ---
+   ==================================================================== */
+
+.database-monitor-container {
+    background-color: #ffffff;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    padding: 25px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    width: 100%;
+}
+
+.database-monitor-container h3 {
+    color: #3b4151;
+    font-size: 16px;
+    margin-bottom: 4px;
+}
+
+.db-subtitle {
+    font-size: 13px;
+    color: #6b7280;
+    margin-bottom: 20px;
+}
+
+/* De Harde Buitenlijnen van de Tabel */
+.database-table {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #cbd5e1; 
+    border-radius: 4px;
+    background-color: #ffffff;
+}
+
+/* Grid verdeling voor harde verticale kolommen */
+.db-header-row, .db-data-row {
+    display: grid;
+    grid-template-columns: 50px 1.5fr 70px 2fr 90px; /* ID | Naam | Leeftijd | Email | Active */
+    width: 100%;
+}
+
+/* Header Rij */
+.db-header-row {
+    background-color: #f8fafc;
+    font-weight: bold;
+    color: #3b4151;
+    font-size: 13px;
+    border-bottom: 2px solid #cbd5e1; /* Harde lijn onder de header */
+}
+
+/* Data Rij (Harde horizontale lijn tussen leden) */
+.db-data-row {
+    border-bottom: 1px solid #e2e8f0; 
+    color: #4f566b;
+    font-size: 13px;
+    transition: background-color 0.2s;
+}
+
+.db-data-row:hover {
+    background-color: #f8fafc; /* Licht effect als je over een lid zweeft */
+}
+
+.db-data-row:last-child {
+    border-bottom: none; /* Geen lijn onder het allerlaatste lid */
+}
+
+/* Cellen regelen de harde verticale scheidingslijnen */
+.db-cell {
+    padding: 12px 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    border-right: 1px solid #e2e8f0; /* Harde verticale scheidingslijn! */
+    display: flex;
+    align-items: center;
+}
+
+/* Iets dikkere verticale scheidingslijnen in de header */
+.db-header-row .db-cell {
+    border-right: 1px solid #cbd5e1; 
+}
+
+/* Haal de verticale lijn weg aan de uiterste rechterkant van de tabel */
+.db-cell:last-child {
+    border-right: none; 
+}
+
+/* Mooie groene badge voor de is_Active status */
+.status-badge {
+    background-color: #e6f6ee;
+    color: #2e7d32;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: bold;
+    display: inline-block;
+    text-align: center;
+    width: 100%;
+}
