@@ -24,4 +24,4 @@ class LidAanmakenSchema(BaseModel):
         pattern=r"^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜäÄöÖçÇ\s\-]+$"  # Blokkeert cijfers en tekens direct aan de poort!
     )
     age: int = Field(..., description="De leeftijd van het lid (minimaal 16)", example=25, ge=16)
-    email: EmailStr = Field(..., description="Het e-mailadres van het lid", example="jan.janssen@example.com")
+    email: EmailStr = Field(..., description="Het e-mailadres van het lid", example="masky.fornow@gmail.com")
