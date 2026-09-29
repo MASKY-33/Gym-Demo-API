@@ -1,5 +1,5 @@
 # Gym-Management-API Demo
 
-This is meant as a Portfolio Demo-Project on my Website,
+This "Production-Ready Gym Management API with Secure Role-Based Access Control (RBAC)" is meant as a Portfolio Demo-Project on my Website,
 
-masky.company
+www.masky.company
