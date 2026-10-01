@@ -12,118 +12,728 @@
 
     <!-- RECHTSBOVEN: De Swagger-stijl Autorisatie Knop -->
     <div class="top-nav-bar">
-        <button id="btn-auth-trigger" class="btn-authorize unlocked">
+        <button
+            id="btn-auth-trigger"
+            class="btn-authorize unlocked"
+            data-i18n="authorizeButton"
+        >
             Autoriseren <span class="lock-icon">🔓</span>
         </button>
     </div>
 
+
     <!-- HOOFD-LAYOUT: Splits het scherm in Links (Swagger) en Rechts (Database) -->
     <div class="main-dashboard-layout">
 
-        <!-- LINKERKANT: De dropdown balk om leden aan te maken -->
-        <div class="swagger-ui-container">
-            <div class="api-endpoint-balk" id="endpoint-trigger">
-                <span class="method-badge">POST</span>
-                <span class="api-path">/api/v1/leden</span>
-                <span class="api-summary">Maak een nieuw gym-lid aan</span>
-                <span class="arrow-icon" id="arrow-icon">▼</span>
-            </div>
 
-            <div class="api-dropdown-content" id="dropdown-content">
-                <div class="request-box">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                        <h4>Parameters / Request Body</h4>
-                        <button class="btn-try-out" id="btn-activate-form">Add new lid</button>
+        <!-- LINKER KOLOM: Nieuw lid + Update lid + Delete lid -->
+        <div class="left-dashboard-column">
+
+
+            <!-- LINKERKANT: De dropdown balk om leden aan te maken -->
+            <div class="swagger-ui-container">
+
+                <div
+                    class="api-endpoint-balk"
+                    id="endpoint-trigger"
+                >
+
+                    <span class="method-badge">
+                        POST
+                    </span>
+
+                    <span class="api-path">
+                        /api/v1/leden
+                    </span>
+
+                    <span
+                        class="api-summary"
+                        data-i18n="postSummary"
+                    >
+                        Maak een nieuw gym-lid aan
+                    </span>
+
+                    <span
+                        class="arrow-icon"
+                        id="arrow-icon"
+                    >
+                        ▼
+                    </span>
+
+                </div>
+
+
+                <div
+                    class="api-dropdown-content"
+                    id="dropdown-content"
+                >
+
+                    <div class="request-box">
+
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+
+                            <h4 data-i18n="parametersRequestBody">
+                                Parameters / Request Body
+                            </h4>
+
+                            <button
+                                class="btn-try-out"
+                                id="btn-activate-form"
+                                data-i18n="addNewLid"
+                            >
+                                Add new lid
+                            </button>
+
+                        </div>
+
+
+                        <form
+                            id="add-lid-form"
+                            class="white-input-card"
+                        >
+
+
+                            <div class="input-group">
+
+                                <label
+                                    for="input-name"
+                                    data-i18n="nameLabel"
+                                >
+                                    Naam:
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="input-name"
+                                    placeholder="bv. Yasir"
+                                    data-i18n-placeholder="namePlaceholder"
+                                    required
+                                    disabled
+                                    pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑüÜäÄöÖçÇ\s\-]+"
+                                >
+
+                            </div>
+
+
+                            <div class="input-group">
+
+                                <label
+                                    for="input-age"
+                                    data-i18n="ageLabel"
+                                >
+                                    Age:
+                                </label>
+
+                                <input
+                                    type="number"
+                                    id="input-age"
+                                    placeholder="bv. 25"
+                                    data-i18n-placeholder="agePlaceholder"
+                                    required
+                                    min="16"
+                                    disabled
+                                >
+
+                            </div>
+
+
+                            <div class="input-group">
+
+                                <label
+                                    for="input-email"
+                                    data-i18n="emailLabel"
+                                >
+                                    Email:
+                                </label>
+
+                                <input
+                                    type="email"
+                                    id="input-email"
+                                    placeholder="bv. yasir.voorbeeld@gemail.com"
+                                    data-i18n-placeholder="emailPlaceholder"
+                                    required
+                                    disabled
+                                >
+
+                            </div>
+
+
+                            <button
+                                type="submit"
+                                class="btn-submit"
+                                id="btn-submit-form"
+                                disabled
+                                style="opacity: 0.5;"
+                                data-i18n="submitButton"
+                            >
+                                Verzenden
+                            </button>
+
+
+                        </form>
+
                     </div>
-                    
-                    <form id="add-lid-form" class="white-input-card">
-                        <div class="input-group">
-                            <label for="input-name">Naam:</label>
-                            <input type="text" id="input-name" placeholder="bv. Jan Janssen" required disabled pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑüÜäÄöÖçÇ\s\-]+">
-                        </div>
-                        <div class="input-group">
-                            <label for="input-age">Age:</label>
-                            <input type="number" id="input-age" placeholder="bv. 25" required min="16" disabled>
-                        </div>
-                        <div class="input-group">
-                            <label for="input-email">Email:</label>
-                            <input type="email" id="input-email" placeholder="bv. jan@example.com" required disabled>
-                        </div>
-                        <button type="submit" class="btn-submit" id="btn-submit-form" disabled style="opacity: 0.5;">Verzenden</button>
-                    </form>
+
+
+                    <div
+                        class="response-box"
+                        id="response-panel"
+                        style="display: none;"
+                    >
+
+                        <h4 data-i18n="responseBody">
+                            Response Body
+                        </h4>
+
+                        <pre id="response-output"></pre>
+
+                    </div>
+
                 </div>
 
-                <div class="response-box" id="response-panel" style="display: none;">
-                    <h4>Response Body</h4>
-                    <pre id="response-output"></pre>
-                </div>
             </div>
+
+
+            <!-- UPDATE: Bestaand gym-lid aanpassen -->
+            <div class="update-ui-container">
+
+                <div
+                    class="api-endpoint-balk update-endpoint-balk"
+                    id="update-endpoint-trigger"
+                >
+
+                    <span class="method-badge update-method-badge">
+                        PUT
+                    </span>
+
+                    <span class="api-path">
+                        /api/v1/leden/{lid_id}
+                    </span>
+
+                    <span
+                        class="api-summary"
+                        data-i18n="updateSummary"
+                    >
+                        Bestaand gym-lid aanpassen
+                    </span>
+
+                    <span
+                        class="arrow-icon"
+                        id="update-arrow-icon"
+                    >
+                        ▼
+                    </span>
+
+                </div>
+
+
+                <div
+                    class="api-dropdown-content update-dropdown-content"
+                    id="update-dropdown-content"
+                >
+
+                    <div class="request-box">
+
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+
+                            <h4 data-i18n="parametersRequestBody">
+                                Parameters / Request Body
+                            </h4>
+
+                            <button
+                                class="btn-try-out update-activate-btn"
+                                id="btn-activate-update"
+                                data-i18n="updateLid"
+                            >
+                                Update lid
+                            </button>
+
+                        </div>
+
+
+                        <form
+                            id="update-lid-form"
+                            class="white-input-card"
+                        >
+
+
+                            <div class="input-group">
+
+                                <label
+                                    for="update-input-id"
+                                    data-i18n="lidIdLabel"
+                                >
+                                    Lid ID:
+                                </label>
+
+                                <input
+                                    type="number"
+                                    id="update-input-id"
+                                    placeholder="bv. 7"
+                                    data-i18n-placeholder="updateIdPlaceholder"
+                                    required
+                                    min="1"
+                                    disabled
+                                >
+
+                            </div>
+
+
+                            <div class="input-group">
+
+                                <label
+                                    for="update-input-name"
+                                    data-i18n="newNameLabel"
+                                >
+                                    Nieuwe naam:
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="update-input-name"
+                                    placeholder="bv. Yasir"
+                                    data-i18n-placeholder="updateNamePlaceholder"
+                                    required
+                                    disabled
+                                    pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑüÜäÄöÖçÇ\s\-]+"
+                                >
+
+                            </div>
+
+
+                            <div class="input-group">
+
+                                <label
+                                    for="update-input-age"
+                                    data-i18n="newAgeLabel"
+                                >
+                                    Nieuwe leeftijd:
+                                </label>
+
+                                <input
+                                    type="number"
+                                    id="update-input-age"
+                                    placeholder="bv. 26"
+                                    data-i18n-placeholder="updateAgePlaceholder"
+                                    required
+                                    min="16"
+                                    disabled
+                                >
+
+                            </div>
+
+
+                            <div class="input-group">
+
+                                <label
+                                    for="update-input-email"
+                                    data-i18n="newEmailLabel"
+                                >
+                                    Nieuw e-mailadres:
+                                </label>
+
+                                <input
+                                    type="email"
+                                    id="update-input-email"
+                                    placeholder="bv. nieuw@email.com"
+                                    data-i18n-placeholder="updateEmailPlaceholder"
+                                    required
+                                    disabled
+                                >
+
+                            </div>
+
+
+                            <button
+                                type="submit"
+                                class="btn-submit"
+                                id="btn-submit-update"
+                                disabled
+                                style="opacity: 0.5;"
+                                data-i18n="updateSubmitButton"
+                            >
+                                Lid aanpassen
+                            </button>
+
+
+                        </form>
+
+                    </div>
+
+
+                    <div
+                        class="response-box"
+                        id="update-response-panel"
+                        style="display: none;"
+                    >
+
+                        <h4 data-i18n="responseBody">
+                            Response Body
+                        </h4>
+
+                        <pre id="update-response-output"></pre>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- DELETE: Bestaand gym-lid verwijderen -->
+            <div class="delete-ui-container">
+
+                <div
+                    class="api-endpoint-balk delete-endpoint-balk"
+                    id="delete-endpoint-trigger"
+                >
+
+                    <span class="method-badge delete-method-badge">
+                        DELETE
+                    </span>
+
+                    <span class="api-path">
+                        /api/v1/leden/{lid_id}
+                    </span>
+
+                    <span
+                        class="api-summary"
+                        data-i18n="deleteSummary"
+                    >
+                        Bestaand gym-lid verwijderen
+                    </span>
+
+                    <span
+                        class="arrow-icon"
+                        id="delete-arrow-icon"
+                    >
+                        ▼
+                    </span>
+
+                </div>
+
+
+                <div
+                    class="api-dropdown-content delete-dropdown-content"
+                    id="delete-dropdown-content"
+                >
+
+                    <div class="request-box">
+
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+
+                            <h4 data-i18n="parameters">
+                                Parameters
+                            </h4>
+
+                            <button
+                                class="btn-try-out delete-activate-btn"
+                                id="btn-activate-delete"
+                                data-i18n="deleteLid"
+                            >
+                                Delete lid
+                            </button>
+
+                        </div>
+
+
+                        <form
+                            id="delete-lid-form"
+                            class="white-input-card"
+                        >
+
+
+                            <div class="input-group">
+
+                                <label
+                                    for="delete-input-id"
+                                    data-i18n="lidIdLabel"
+                                >
+                                    Lid ID:
+                                </label>
+
+                                <input
+                                    type="number"
+                                    id="delete-input-id"
+                                    placeholder="bv. 16"
+                                    data-i18n-placeholder="deleteIdPlaceholder"
+                                    required
+                                    min="1"
+                                    disabled
+                                >
+
+                            </div>
+
+
+                            <button
+                                type="submit"
+                                class="btn-submit delete-submit-btn"
+                                id="btn-submit-delete"
+                                disabled
+                                style="opacity: 0.5;"
+                                data-i18n="deleteSubmitButton"
+                            >
+                                Lid verwijderen
+                            </button>
+
+
+                        </form>
+
+                    </div>
+
+
+                    <div
+                        class="response-box"
+                        id="delete-response-panel"
+                        style="display: none;"
+                    >
+
+                        <h4 data-i18n="responseBody">
+                            Response Body
+                        </h4>
+
+                        <pre id="delete-response-output"></pre>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
         </div>
+
 
         <!-- RECHTERKANT: Het Database Overzicht Kader met harde lijnen -->
         <div class="database-monitor-container">
-            <h3>🗄️ Live SQLite Database Monitor</h3>
-            <p class="db-subtitle">Tabel: <code>gym_leden</code> (Real-time weergave)</p>
+
+            <h3 data-i18n="databaseTitle">
+                🗄️ Live SQLite Database Monitor
+            </h3>
+
+
+            <p class="db-subtitle">
+
+                <span data-i18n="databaseTablePrefix">
+                    Tabel:
+                </span>
+
+                <code>gym_members</code>
+
+                <span data-i18n="databaseRealtime">
+                    (Real-time weergave)
+                </span>
+
+            </p>
+
 
             <div class="database-table">
+
+
                 <!-- Tabel Header met kolommen -->
                 <div class="db-header-row">
-                    <div class="db-cell col-id">ID</div>
-                    <div class="db-cell col-naam">Naam</div>
-                    <div class="db-cell col-age">Leeftijd</div>
-                    <div class="db-cell col-email">E-mail</div>
-                    <div class="db-cell col-active">is_Active</div>
+
+                    <div
+                        class="db-cell col-id"
+                        data-i18n="tableId"
+                    >
+                        ID
+                    </div>
+
+                    <div
+                        class="db-cell col-naam"
+                        data-i18n="tableName"
+                    >
+                        Naam
+                    </div>
+
+                    <div
+                        class="db-cell col-age"
+                        data-i18n="tableAge"
+                    >
+                        Leeftijd
+                    </div>
+
+                    <div
+                        class="db-cell col-email"
+                        data-i18n="tableEmail"
+                    >
+                        E-mail
+                    </div>
+
+                    <div
+                        class="db-cell col-active"
+                        data-i18n="tableActive"
+                    >
+                        is_Active
+                    </div>
+
                 </div>
+
 
                 <!-- Hier komen de database rijen live in te staan via JavaScript -->
                 <div id="db-rows-container">
                     <!-- Rijen worden hier live ingevoegd -->
                 </div>
+
+
             </div>
+
         </div>
 
     </div>
+
 
     <!-- POP-UP TABEL: Het Autorisatie Venster -->
-    <div class="auth-modal-overlay" id="auth-modal">
+    <div
+        class="auth-modal-overlay"
+        id="auth-modal"
+    >
+
         <div class="auth-modal-card">
+
+
             <div class="auth-modal-header">
-                <h3>Autoriseren</h3>
-                <button class="btn-close-modal" id="btn-close-modal">&times;</button>
+
+                <h3 data-i18n="authModalTitle">
+                    Autoriseren
+                </h3>
+
+                <button
+                    class="btn-close-modal"
+                    id="btn-close-modal"
+                >
+                    &times;
+                </button>
+
             </div>
 
+
             <div class="auth-modal-body">
+
+
                 <!-- FORMULIER 1: Email invoeren (Stap 1) -->
                 <form id="auth-form-step-1">
-                    <p class="auth-instruction">Geef het e-mailadres "wachtwoord@gmail.com" in om een tijdelijk wachtwoord te krijgen.</p>
+
+                    <p
+                        class="auth-instruction"
+                        data-i18n="authInstruction"
+                    >
+                        Geef het e-mailadres "wachtwoord@gmail.com" in om een tijdelijk wachtwoord te krijgen.
+                    </p>
+
+
                     <div class="input-group">
-                        <label>E-mailadres:</label>
-                        <input type="email" id="auth-email" required autocomplete="off">
+
+                        <label
+                            data-i18n="emailAddressLabel"
+                        >
+                            E-mailadres:
+                        </label>
+
+                        <input
+                            type="email"
+                            id="auth-email"
+                            required
+                            autocomplete="off"
+                        >
+
                     </div>
-                    <button type="submit" class="btn-modal-action" id="btn-request-code">Vraag tijdelijke code aan</button>
+
+
+                    <button
+                        type="submit"
+                        class="btn-modal-action"
+                        id="btn-request-code"
+                        data-i18n="requestCodeButton"
+                    >
+                        Vraag tijdelijke code aan
+                    </button>
+
                 </form>
+
 
                 <!-- FORMULIER 2: Pincode invoeren (Stap 2) -->
-                <form id="auth-form-step-2" style="display: none;">
-                    <p class="auth-instruction success-text">Er is een 6-cijferige code gegenereerd! (Zie Python terminal)</p>
+                <form
+                    id="auth-form-step-2"
+                    style="display: none;"
+                >
+
+                    <p
+                        class="auth-instruction success-text"
+                        data-i18n="codeGenerated"
+                    >
+                        Er is een 6-cijferige code gegenereerd!
+                    </p>
+
+
                     <div class="input-group">
-                        <label>Tijdelijk Wachtwoord (Pincode):</label>
-                        <input type="text" id="auth-code" placeholder="6-cijferige code" maxlength="6" autocomplete="off" required>
+
+                        <label
+                            data-i18n="temporaryPasswordLabel"
+                        >
+                            Tijdelijk Wachtwoord (Pincode):
+                        </label>
+
+                        <input
+                            type="text"
+                            id="auth-code"
+                            placeholder="6-cijferige code"
+                            data-i18n-placeholder="codePlaceholder"
+                            maxlength="6"
+                            autocomplete="off"
+                            required
+                        >
+
                     </div>
-                    <button type="submit" class="btn-modal-action" id="btn-submit-auth">Autoriseer</button>
+
+
+                    <button
+                        type="submit"
+                        class="btn-modal-action"
+                        id="btn-submit-auth"
+                        data-i18n="authorizeButtonModal"
+                    >
+                        Autoriseer
+                    </button>
+
                 </form>
 
+
                 <!-- FORMULIER 3: Alleen de deautorisatie-knop -->
-                <form id="auth-form-logout" style="display: none;">
-                    <p class="auth-instruction" style="text-align: center; margin-bottom: 20px;">Je bent momenteel geautoriseerd.</p>
-                    <button type="submit" class="btn-modal-cancel" id="btn-deauthorize-modal">Deautoriseren</button>
+                <form
+                    id="auth-form-logout"
+                    style="display: none;"
+                >
+
+                    <p
+                        class="auth-instruction"
+                        style="text-align: center; margin-bottom: 20px;"
+                        data-i18n="authorizedMessage"
+                    >
+                        Je bent momenteel geautoriseerd.
+                    </p>
+
+
+                    <button
+                        type="submit"
+                        class="btn-modal-cancel"
+                        id="btn-deauthorize-modal"
+                        data-i18n="deauthorizeButton"
+                    >
+                        Deautoriseren
+                    </button>
+
                 </form>
+
             </div>
         </div>
     </div>
 
 
-    
+
+
     <script src="gym_api.js"></script>
+
 </body>
 </html>
