@@ -10,24 +10,52 @@ body {
     padding: 40px 0;
 }
 
-/* --- NIEUW: DE HOOFDLAYOUT DIE SCHERM SPLITST --- */
+
+/* ================================================================
+   HOOFDLAYOUT
+   Links: Nieuw lid + Update lid
+   Rechts: Database
+   ================================================================ */
+
 .main-dashboard-layout {
     display: grid;
-    grid-template-columns: 1fr 1fr; /* Links en rechts exact even breed */
-    gap: 40px;
+    grid-template-columns: 1.2fr 0.8fr;
+    column-gap: 50px;
     width: 100%;
     max-width: 1600px;
-    margin: 80px auto 0 auto;
+    margin: 130px auto 0 auto;
     padding: 0 4%;
     align-items: start;
 }
 
-/* Aangepast zodat de container de gridruimte netjes vult */
+
+/* ================================================================
+   LINKER KOLOM
+   Nieuw lid + Update lid staan hier onder elkaar
+   ================================================================ */
+
+.left-dashboard-column {
+    width: 100%;
+    max-width: 600px;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    align-items: stretch;
+}
+
+
+/* ================================================================
+   NIEUW LID / POST
+   ================================================================ */
+
 .swagger-ui-container {
     width: 100%;
+    max-width: 600px;
     border-radius: 4px;
     overflow: hidden;
+    margin-top: 110px;
 }
+
 
 /* De Dropdown Balk (Swagger POST stijl) */
 .api-endpoint-balk {
@@ -44,6 +72,7 @@ body {
 .api-endpoint-balk:hover {
     background-color: rgba(73, 204, 144, 0.15);
 }
+
 
 /* Groene POST badge */
 .method-badge {
@@ -82,9 +111,10 @@ body {
     transform: rotate(180deg);
 }
 
+
 /* Dropdown Container */
 .api-dropdown-content {
-    display: none; /* Standaard gesloten */
+    display: none;
     background-color: rgba(73, 204, 144, 0.05);
     border: 1px solid #49cc90;
     border-top: none;
@@ -93,10 +123,14 @@ body {
     border-bottom-right-radius: 4px;
 }
 
-/* --- HERSTEL VAN DE GROENE 'ADD NEW LID' KNOP (SWAGGER STIJL) --- */
+
+/* ================================================================
+   ADD NEW LID KNOP
+   ================================================================ */
+
 .btn-try-out {
-    background-color: #49cc90 !important; /* Prachtig Swagger groen */
-    color: #ffffff !important;            /* Strak witte tekst */
+    background-color: #49cc90 !important;
+    color: #ffffff !important;
     border: none !important;
     padding: 6px 14px !important;
     font-size: 13px !important;
@@ -108,16 +142,22 @@ body {
 }
 
 .btn-try-out:hover {
-    background-color: #3ca977 !important; /* Iets donkerder groen bij hoveren */
+    background-color: #3ca977 !important;
 }
 
-.request-box h4, .response-box h4 {
+
+.request-box h4,
+.response-box h4 {
     color: #3b4151;
     font-size: 14px;
     margin-bottom: 12px;
 }
 
-/* Het Grote Witte Invoerkader */
+
+/* ================================================================
+   INPUT FORMULIER
+   ================================================================ */
+
 .white-input-card {
     background-color: #ffffff;
     border: 1px solid #ced4da;
@@ -153,7 +193,11 @@ body {
     box-shadow: 0 0 0 3px rgba(73, 204, 144, 0.2);
 }
 
-/* De Grote Submit Knop */
+
+/* ================================================================
+   SUBMIT KNOP
+   ================================================================ */
+
 .btn-submit {
     display: block;
     width: 100%;
@@ -173,7 +217,11 @@ body {
     background-color: #3ca977;
 }
 
-/* Response Paneel */
+
+/* ================================================================
+   RESPONSE PANEEL
+   ================================================================ */
+
 .response-box {
     margin-top: 25px;
     border-top: 1px dashed #49cc90;
@@ -181,23 +229,27 @@ body {
 }
 
 #response-output {
-    background-color: #292b36;
-    color: #a9a9a9;
-    padding: 15px;
-    border-radius: 4px;
-    font-family: monospace;
-    font-size: 13px;
+    background-color: transparent;
+    color: #3b4151;
+    padding: 0;
+    border-radius: 0;
+    font-family: inherit;
+    font-size: 16px;
     overflow-x: auto;
     white-space: pre-wrap;
 }
 
-/* --- POSITIONERING RECHTSBOVEN --- */
+/* ================================================================
+   AUTORISEREN RECHTSBOVEN
+   ================================================================ */
+
 .top-nav-bar {
     position: absolute;
     top: 25px;
     right: 4%;
     z-index: 10;
 }
+
 
 /* De Swagger-stijl knop */
 .btn-authorize {
@@ -222,21 +274,28 @@ body {
     box-shadow: 0 6px 14px rgba(73, 204, 144, 0.12);
 }
 
+
 /* State wanneer geautoriseerd */
 .btn-authorize.locked {
     color: #f93e3e;
     border-color: #f93e3e;
 }
+
 .btn-authorize.locked:hover {
     background-color: rgba(249, 62, 62, 0.05);
 }
+
 
 /* Grotere slot-icoon schaling */
 .lock-icon {
     font-size: 17px;
 }
 
-/* --- POP-UP MODAL (DE TABEL) STYLING --- */
+
+/* ================================================================
+   POP-UP MODAL
+   ================================================================ */
+
 .auth-modal-overlay {
     display: none;
     position: fixed;
@@ -262,8 +321,15 @@ body {
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(-10px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .auth-modal-header {
@@ -288,7 +354,10 @@ body {
     color: #aaaaAA;
     cursor: pointer;
 }
-.btn-close-modal:hover { color: #3b4151; }
+
+.btn-close-modal:hover {
+    color: #3b4151;
+}
 
 .auth-modal-body {
     padding: 25px 20px;
@@ -306,6 +375,7 @@ body {
     font-weight: 600;
 }
 
+
 /* Knoppen binnen de pop-up */
 .btn-modal-action {
     background-color: #49cc90;
@@ -320,7 +390,10 @@ body {
     margin-top: 5px;
     transition: background-color 0.2s;
 }
-.btn-modal-action:hover { background-color: #3ca977; }
+
+.btn-modal-action:hover {
+    background-color: #3ca977;
+}
 
 .modal-footer-buttons {
     display: flex;
@@ -339,15 +412,15 @@ body {
     width: 100%;
     margin-top: 5px;
 }
-.btn-modal-cancel:hover { background-color: #d63333; }
+
+.btn-modal-cancel:hover {
+    background-color: #d63333;
+}
 
 
-
-
-
-/* ====================================================================
-   --- STYLING VOOR HET REAL-TIME DATABASE KADER MET LIJNEN ---
-   ==================================================================== */
+/* ================================================================
+   DATABASE MONITOR
+   ================================================================ */
 
 .database-monitor-container {
     background-color: #ffffff;
@@ -356,6 +429,7 @@ body {
     padding: 25px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
     width: 100%;
+    margin-top: 20px;
 }
 
 .database-monitor-container h3 {
@@ -370,21 +444,25 @@ body {
     margin-bottom: 20px;
 }
 
+
 /* De Harde Buitenlijnen van de Tabel */
 .database-table {
     display: flex;
     flex-direction: column;
-    border: 1px solid #cbd5e1; 
+    border: 1px solid #cbd5e1;
     border-radius: 4px;
     background-color: #ffffff;
 }
 
+
 /* Grid verdeling voor harde verticale kolommen */
-.db-header-row, .db-data-row {
+.db-header-row,
+.db-data-row {
     display: grid;
-    grid-template-columns: 50px 1.5fr 70px 2fr 90px; /* ID | Naam | Leeftijd | Email | Active */
+    grid-template-columns: 50px 1.5fr 70px 2fr 90px;
     width: 100%;
 }
+
 
 /* Header Rij */
 .db-header-row {
@@ -392,24 +470,26 @@ body {
     font-weight: bold;
     color: #3b4151;
     font-size: 13px;
-    border-bottom: 2px solid #cbd5e1; /* Harde lijn onder de header */
+    border-bottom: 2px solid #cbd5e1;
 }
 
-/* Data Rij (Harde horizontale lijn tussen leden) */
+
+/* Data Rij */
 .db-data-row {
-    border-bottom: 1px solid #e2e8f0; 
+    border-bottom: 1px solid #e2e8f0;
     color: #4f566b;
     font-size: 13px;
     transition: background-color 0.2s;
 }
 
 .db-data-row:hover {
-    background-color: #f8fafc; /* Licht effect als je over een lid zweeft */
+    background-color: #f8fafc;
 }
 
 .db-data-row:last-child {
-    border-bottom: none; /* Geen lijn onder het allerlaatste lid */
+    border-bottom: none;
 }
+
 
 /* Cellen regelen de harde verticale scheidingslijnen */
 .db-cell {
@@ -417,20 +497,23 @@ body {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    border-right: 1px solid #e2e8f0; /* Harde verticale scheidingslijn! */
+    border-right: 1px solid #e2e8f0;
     display: flex;
     align-items: center;
 }
 
+
 /* Iets dikkere verticale scheidingslijnen in de header */
 .db-header-row .db-cell {
-    border-right: 1px solid #cbd5e1; 
+    border-right: 1px solid #cbd5e1;
 }
 
-/* Haal de verticale lijn weg aan de uiterste rechterkant van de tabel */
+
+/* Haal de verticale lijn weg aan de uiterste rechterkant */
 .db-cell:last-child {
-    border-right: none; 
+    border-right: none;
 }
+
 
 /* Mooie groene badge voor de is_Active status */
 .status-badge {
@@ -443,4 +526,90 @@ body {
     display: inline-block;
     text-align: center;
     width: 100%;
+}
+
+
+/* ================================================================
+   UPDATE BESTAAND GYM-LID
+   ================================================================ */
+
+.update-ui-container {
+    width: 100%;
+    max-width: 600px;
+}
+
+
+/* Blauwe PUT balk */
+.update-endpoint-balk {
+    border-color: #61affe;
+    background-color: rgba(97, 175, 254, 0.1);
+}
+
+.update-endpoint-balk:hover {
+    background-color: rgba(97, 175, 254, 0.15);
+}
+
+.update-method-badge {
+    background-color: #61affe;
+}
+
+
+/* Blauwe dropdown */
+.update-dropdown-content {
+    border-color: #61affe;
+    background-color: rgba(97, 175, 254, 0.05);
+}
+
+
+/* ================================================================
+   DELETE BESTAAND GYM-LID
+   ================================================================ */
+
+.delete-ui-container {
+    width: 100%;
+    max-width: 600px;
+}
+
+
+/* Rode DELETE balk */
+.delete-endpoint-balk {
+    border-color: #f93e3e;
+    background-color: rgba(249, 62, 62, 0.1);
+}
+
+.delete-endpoint-balk:hover {
+    background-color: rgba(249, 62, 62, 0.15);
+}
+
+
+/* Rode DELETE badge */
+.delete-method-badge {
+    background-color: #f93e3e;
+}
+
+
+/* Rode DELETE dropdown */
+.delete-dropdown-content {
+    border-color: #f93e3e;
+    background-color: rgba(249, 62, 62, 0.05);
+}
+
+
+/* Rode Delete lid knop */
+.delete-activate-btn {
+    background-color: #f93e3e !important;
+}
+
+.delete-activate-btn:hover {
+    background-color: #d63333 !important;
+}
+
+
+/* Rode Lid verwijderen knop */
+.delete-submit-btn {
+    background-color: #f93e3e;
+}
+
+.delete-submit-btn:hover {
+    background-color: #d63333;
 }
