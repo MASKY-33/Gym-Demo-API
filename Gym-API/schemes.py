@@ -18,10 +18,35 @@ class LoginAanvraag(BaseModel):
 # Het data-model voor het aanmaken van leden, inclusief jouw strikte whitelist-patroon
 class LidAanmakenSchema(BaseModel):
     naam: str = Field(
-        ..., 
+        ...,
         description="De volledige naam van het nieuwe gym-lid (alleen letters toegestaan)",
-        example="Jan Janssen",
+        example="Yasir",
         pattern=r"^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜäÄöÖçÇ\s\-]+$"  # Blokkeert cijfers en tekens direct aan de poort!
     )
     age: int = Field(..., description="De leeftijd van het lid (minimaal 16)", example=25, ge=16)
-    email: EmailStr = Field(..., description="Het e-mailadres van het lid", example="masky.fornow@gmail.com")
+    email: EmailStr = Field(..., description="Het e-mailadres van het lid", example="yasir.voorbeeld@gmail.com")
+
+
+
+
+
+
+# Het data-model voor het aanpassen van een bestaand lid
+class LidAanpassenSchema(BaseModel):
+    naam: str = Field(
+        ...,
+        description="De volledige naam van het gym-lid (alleen letters toegestaan)",
+        example="Yasir",
+        pattern=r"^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜäÄöÖçÇ\s\-]+$"
+    )
+    age: int = Field(
+        ...,
+        description="De leeftijd van het lid (minimaal 16)",
+        example=25,
+        ge=16
+    )
+    email: EmailStr = Field(
+        ...,
+        description="Het e-mailadres van het gym-lid",
+        example="yasir.voorbeeld@gmail.com"
+    )
