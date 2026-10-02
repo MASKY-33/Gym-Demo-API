@@ -25,12 +25,12 @@ actieve_keycards = {}  # Slaat geldige tokens en hun verlooptijd op
 
 # --- BEVEILIGINGSFUNCTIE ---
 def controleer_keycard(token: str = Depends(oauth2_scheme)):
-    """Controleert bij elke beveiligde actie of de 30-minuten keycard nog geldig is"""
+    """Controleert bij elke beveiligde actie of de 3-minuten keycard nog geldig is"""
     if token not in actieve_keycards:
-        raise HTTPException(status_code=401, detail="Geen toegang: Ongeldige of ontbrekende Keycard.")
-    
+        raise HTTPException(status_code=403, detail="Geen toegang: Ongeldige of ontbrekende Keycard.")
+
     if datetime.now() > actieve_keycards[token]:
         del actieve_keycards[token]
-        raise HTTPException(status_code=401, detail="Keycard is verlopen (30 minuten limiet). Log opnieuw in.")
-    
+        raise HTTPException(status_code=403, detail="Keycard is verlopen (3 minuten limiet). Log opnieuw in.")
+
     return token
