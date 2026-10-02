@@ -7,7 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 # Alles importeren uit mijn aparta files
 from db import db_conn
-from schemes import EmailAanvraag, LidAanmakenSchema, LoginAanvraag
+from schemes import EmailAanvraag, LidAanmakenSchema, LidAanpassenSchema, LoginAanvraag
 from auth import oauth2_scheme, tijdelijk_wachtwoord_opslag, actieve_keycards, controleer_keycard
 
 
@@ -31,6 +31,8 @@ app.add_middleware(
 )
 
 
+
+
 VAST_EMAIL = "wachtwoord@gmail.com"  # Jouw vaste bevoegde e-mailadres
 
 
@@ -45,7 +47,7 @@ async def code_aanvragen(payload: EmailAanvraag):
     # Genereer elke keer een UNIEKE 6-cijferige code
     tijdelijke_code = "".join(secrets.choice("0123456789") for _ in range(6))
     tijdelijk_wachtwoord_opslag["code"] = tijdelijke_code
-    tijdelijk_wachtwoord_opslag["verloopt_om"] = datetime.now() + timedelta(minutes=5)
+    tijdelijk_wachtwoord_opslag["verloopt_om"] = datetime.now() + timedelta(minutes=1)
 
     # We sturen de unieke code nu VEILIG mee terug in de response voor de demo-frontend
     return {
@@ -56,7 +58,8 @@ async def code_aanvragen(payload: EmailAanvraag):
 
 
 
-@app.post("/api/v1/auth/login", summary="2. Autoriseren (Verkrijg 30-minuten Keycard)")
+
+@app.post("/api/v1/auth/login", summary="2. Autoriseren (Verkrijg 3-minuten Keycard)")
 async def login(payload: LoginAanvraag):
     if not tijdelijk_wachtwoord_opslag["code"] or datetime.now() > tijdelijk_wachtwoord_opslag["verloopt_om"]:
         raise HTTPException(status_code=400, detail="Geen actieve code gevonden of code is verlopen.")
@@ -65,14 +68,15 @@ async def login(payload: LoginAanvraag):
         raise HTTPException(status_code=401, detail="Onjuist e-mailadres of onjuist tijdelijk wachtwoord.")
 
     keycard_id = secrets.token_hex(32)
-    actieve_keycards[keycard_id] = datetime.now() + timedelta(minutes=30)
+    actieve_keycards[keycard_id] = datetime.now() + timedelta(minutes=3)
     tijdelijk_wachtwoord_opslag["code"] = None
 
     return {
         "access_token": keycard_id,
         "token_type": "bearer",
-        "expires_in_seconds": 1800
+        "expires_in_seconds": 180
     }
+
 
 
 @app.post("/api/v1/auth/logout", summary="3. Deautoriseren (Unauthorize)")
@@ -111,9 +115,120 @@ async def lid_aanmaken(payload: LidAanmakenSchema, token: str = Depends(controle
                 "created_at": huidige_tijd
             }
         }
+
+
     except sqlite3.Error as e:
         print(f"[DATABASE ERROR] {e}")
         raise HTTPException(status_code=500, detail="Interne databasefout bij het opslaan van het lid.")
+
+
+
+@app.put("/api/v1/leden/{lid_id}", summary="Bestaand lid aanpassen")
+async def lid_aanpassen(
+    lid_id: int,
+    payload: LidAanpassenSchema,
+    token: str = Depends(controleer_keycard)
+):
+    cursor = db_conn.cursor()
+
+    try:
+        # Controleer eerst of het lid met dit ID bestaat
+        cursor.execute(
+            "SELECT id FROM gym_members WHERE id = ?",
+            (lid_id,)
+        )
+        bestaand_lid = cursor.fetchone()
+
+        if not bestaand_lid:
+            raise HTTPException(
+                status_code=404,
+                detail=f"Geen lid gevonden met ID {lid_id}."
+            )
+
+        # Pas het bestaande database-record aan
+        cursor.execute(
+            """
+            UPDATE gym_members
+            SET naam = ?, age = ?, email = ?
+            WHERE id = ?
+            """,
+            (payload.naam, payload.age, payload.email, lid_id)
+        )
+
+        db_conn.commit()
+
+        print(f"[DATABASE LOG] Lid met ID {lid_id} succesvol aangepast.")
+
+        return {
+            "status": "success",
+            "message": f"Lid met ID {lid_id} is succesvol aangepast.",
+            "data": {
+                "id": lid_id,
+                "naam": payload.naam,
+                "age": payload.age,
+                "email": payload.email
+            }
+        }
+
+
+    except sqlite3.Error as e:
+        print(f"[DATABASE ERROR] {e}")
+        raise HTTPException(
+            status_code=500,
+            detail="Interne databasefout bij het aanpassen van het lid."
+        )
+
+
+
+
+
+@app.delete("/api/v1/leden/{lid_id}", summary="Bestaand lid verwijderen")
+async def lid_verwijderen(
+    lid_id: int,
+    token: str = Depends(controleer_keycard)
+):
+    cursor = db_conn.cursor()
+
+    try:
+        # Controleer eerst of het lid met dit ID bestaat
+        cursor.execute(
+            "SELECT id FROM gym_members WHERE id = ?",
+            (lid_id,)
+        )
+        bestaand_lid = cursor.fetchone()
+
+        if not bestaand_lid:
+            raise HTTPException(
+                status_code=404,
+                detail=f"Geen lid gevonden met ID {lid_id}."
+            )
+
+        # Verwijder het lid permanent uit de SQLite database
+        cursor.execute(
+            "DELETE FROM gym_members WHERE id = ?",
+            (lid_id,)
+        )
+
+        db_conn.commit()
+
+        print(f"[DATABASE LOG] Lid met ID {lid_id} succesvol verwijderd.")
+
+        return {
+            "status": "success",
+            "message": f"Lid met ID {lid_id} is succesvol verwijderd.",
+            "data": {
+                "id": lid_id
+            }
+        }
+
+    except sqlite3.Error as e:
+        print(f"[DATABASE ERROR] {e}")
+        raise HTTPException(
+            status_code=500,
+            detail="Interne databasefout bij het verwijderen van het lid."
+        )
+
+
 
 
 
